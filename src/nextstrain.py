@@ -96,18 +96,18 @@ def keep_sites(ts, positions):
     return tables.tree_sequence()
 
 
-def subset_to_intersection(tssc, tsnt, filter_sites=True, **kwargs):
+def subset_to_intersection(tssc, tsnt, metadata_key, filter_sites=True, **kwargs):
     """
-    Returns the subset of the two tree sequences for the set of sample strains
-    in both.
+    Returns the subset of the two tree sequences for the set of samples
+    in both, based on matching the metadata key
     
     **kwargs are sent to the `simplify` commands used. Note that if
     `filter_nodes` is used, the samples in the returned subsets may not
     have the same nodes IDs or even be in the same order.
     """
     assert tsnt.num_trees == 1
-    strain_map1 = {tssc.node(u).metadata["strain"]: u for u in tssc.samples()}
-    strain_map2 = {tsnt.node(u).metadata["strain"]: u for u in tsnt.samples()}
+    strain_map1 = {tssc.node(u).metadata[metadata_key]: u for u in tssc.samples()}
+    strain_map2 = {tsnt.node(u).metadata[metadata_key]: u for u in tsnt.samples()}
     intersection = list(set(strain_map1.keys()) & set(strain_map2.keys()))
     # Sort by date
     intersection.sort(key=lambda s: -tssc.nodes_time[strain_map1[s]])
